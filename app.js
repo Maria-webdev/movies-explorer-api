@@ -10,17 +10,17 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-const cardsRouter = require('./routes/cards');
+const moviesRouter = require('./routes/movies');
 const userRouter = require('./routes/users');
-const { userLogin, userCreate } = require('./middlewares/validation');
+const { userLoginValidation, userCreateValidation } = require('./middlewares/validation');
 const NotFoundError = require('./errors/not-found');
+
+const auth = require('./middlewares/auth');
+
+const { createUser, updateUser, login, getCurrentUser, logOut } = require('./controllers/users');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-const auth = require('./middlewares/auth');
-const { login, createUser, signout } = require('./controllers/users');
-
 app.use(cookieParser());
 
 const corsAllowed = [
@@ -28,10 +28,10 @@ const corsAllowed = [
   'https://localhost:3001',
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://viannat-frontend-mesto.nomoredomains.club',
-  'http://viannat-frontend-mesto.nomoredomains.club',
-  'https://viannat-backend-mesto.nomoredomains.club',
-  'http://viannat-backend-mesto.nomoredomains.club',
+  // 'https://viannat-frontend-mesto.nomoredomains.club',
+  // 'http://viannat-frontend-mesto.nomoredomains.club',
+  // 'https://viannat-backend-mesto.nomoredomains.club',
+  // 'http://viannat-backend-mesto.nomoredomains.club',
   'https://62.84.116.158',
   'http://62.84.116.158',
 ];
@@ -59,15 +59,15 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', userLogin, login);
-app.post('/signup', userCreate, createUser);
+app.post('/signin', userLoginValidation, login);
+app.post('/signup', userCreateValidation, createUser);
 
 app.use(requestLogger);
 
-app.use('/cards', auth, cardsRouter);
-app.use('/users', auth, userRouter);
+app.use('/movies', auth, moviesRouter);
+app.use('/users/me', auth, userRouter);
 
-app.delete('/signout', signout);
+app.delete('/signout', logOut);
 
 app.use('*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден.')));
 
