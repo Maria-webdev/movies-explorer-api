@@ -1,23 +1,24 @@
 const express = require('express');
 const mongoose = require('mongoose');
-
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
-
 const cors = require('cors');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
 const moviesRouter = require('./routes/movies');
 const userRouter = require('./routes/users');
-const { userLoginValidation, userCreateValidation } = require('./middlewares/validation');
+
 const NotFoundError = require('./errors/not-found');
 
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { userLoginValidation, userCreateValidation } = require('./middlewares/validation');
 
-const { createUser, updateUser, login, getCurrentUser, logOut } = require('./controllers/users');
+const { createUser, login, logOut } = require('./controllers/users');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -35,6 +36,11 @@ const corsAllowed = [
   'https://62.84.116.158',
   'http://62.84.116.158',
 ];
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
 
 require('dotenv').config();
 
@@ -61,6 +67,9 @@ app.get('/crash-test', () => {
 
 app.post('/signin', userLoginValidation, login);
 app.post('/signup', userCreateValidation, createUser);
+
+app.use(helmet());
+app.use(limiter);
 
 app.use(requestLogger);
 

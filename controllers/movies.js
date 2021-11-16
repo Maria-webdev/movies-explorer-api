@@ -22,7 +22,8 @@ module.exports.createMovie = (req, res, next) => {
     nameRU,
     nameEN,
     thumbnail,
-    movieId } = req.body;
+    movieId,
+  } = req.body;
   Movie.create({
     country,
     director,
@@ -35,7 +36,8 @@ module.exports.createMovie = (req, res, next) => {
     nameEN,
     thumbnail,
     movieId,
-    owner: req.user._id })
+    owner: req.user._id,
+  })
     .then((newMovie) => {
       res.status(200).send(newMovie);
     })
