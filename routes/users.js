@@ -1,5 +1,5 @@
 const userRouter = require('express').Router();
-const { userInfoValidation } = require('../middlewares/validation');
+const { userInfoValidation, userLoginValidation, userCreateValidation } = require('../middlewares/validation');
 
 const {
   getCurrentUser,
@@ -11,8 +11,8 @@ const {
 
 userRouter.get('/users/me', userInfoValidation, getCurrentUser);
 userRouter.patch('/users/me', userInfoValidation, updateUser);
-userRouter.post('/signup', userInfoValidation, createUser);
-userRouter.post('/signin', userInfoValidation, login);
-userRouter.post('/signout', userInfoValidation, logout);
+userRouter.post('/signup', userCreateValidation, createUser);
+userRouter.post('/signin', userLoginValidation, login);
+userRouter.post('/signout', logout);
 
 module.exports = userRouter;
