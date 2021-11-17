@@ -13,6 +13,6 @@ userRouter.get('/users/me', userInfoValidation, getCurrentUser);
 userRouter.patch('/users/me', userInfoValidation, updateUser);
 userRouter.post('/signup', userCreateValidation, createUser);
 userRouter.post('/signin', userLoginValidation, logIn);
-userRouter.post('/signout', logOut);
+userRouter.delete('/signout', logOut);
 
 module.exports = userRouter;

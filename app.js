@@ -16,9 +16,6 @@ const NotFoundError = require('./errors/not-found');
 
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { userLoginValidation, userCreateValidation } = require('./middlewares/validation');
-
-const { createUser, logIn, logOut } = require('./controllers/users');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -65,9 +62,6 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', userLoginValidation, logIn);
-app.post('/signup', userCreateValidation, createUser);
-
 app.use(helmet());
 app.use(limiter);
 
@@ -75,8 +69,6 @@ app.use(requestLogger);
 
 app.use('/movies', auth, moviesRouter);
 app.use('/users/me', auth, userRouter);
-
-app.delete('/signout', logOut);
 
 app.use('*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден.')));
 
