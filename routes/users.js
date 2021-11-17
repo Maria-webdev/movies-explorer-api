@@ -5,14 +5,14 @@ const {
   getCurrentUser,
   updateUser,
   createUser,
-  login,
-  logout,
+  logIn,
+  logOut,
 } = require('../controllers/users');
 
 userRouter.get('/users/me', userInfoValidation, getCurrentUser);
 userRouter.patch('/users/me', userInfoValidation, updateUser);
 userRouter.post('/signup', userCreateValidation, createUser);
-userRouter.post('/signin', userLoginValidation, login);
-userRouter.post('/signout', logout);
+userRouter.post('/signin', userLoginValidation, logIn);
+userRouter.post('/signout', logOut);
 
 module.exports = userRouter;

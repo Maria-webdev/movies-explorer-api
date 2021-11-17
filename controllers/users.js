@@ -54,7 +54,7 @@ module.exports.updateUser = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.logIn = (req, res, next) => {
   const { email, password } = req.body;
   const { NODE_ENV, JWT_SECRET } = process.env;
 

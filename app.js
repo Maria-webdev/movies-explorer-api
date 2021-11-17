@@ -18,7 +18,7 @@ const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { userLoginValidation, userCreateValidation } = require('./middlewares/validation');
 
-const { createUser, login, logOut } = require('./controllers/users');
+const { createUser, logIn, logOut } = require('./controllers/users');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -65,7 +65,7 @@ app.get('/crash-test', () => {
   }, 0);
 });
 
-app.post('/signin', userLoginValidation, login);
+app.post('/signin', userLoginValidation, logIn);
 app.post('/signup', userCreateValidation, createUser);
 
 app.use(helmet());
