@@ -10,7 +10,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 
 const moviesRouter = require('./routes/movies');
-const userRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
 
 const NotFoundError = require('./errors/not-found');
 
@@ -57,8 +57,6 @@ app.use(cors({
 
 app.options('*', cors());
 
-app.use(cookieParser());
-
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -74,7 +72,7 @@ app.post('/signup', userCreateValidation, createUser);
 app.use(requestLogger);
 
 app.use('/movies', auth, moviesRouter);
-app.use('/users/me', auth, userRouter);
+app.use('/users/me', auth, usersRouter);
 
 app.delete('/signout', logOut);
 

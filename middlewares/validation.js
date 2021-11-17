@@ -27,14 +27,14 @@ module.exports.userLoginValidation = celebrate({
 
 module.exports.userCreateValidation = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().custom((value) => {
       if (!isEmail(value)) {
         throw new CelebrateError('с email что-то не то');
       }
       return value;
     }),
-    password: Joi.string().required(),
+    password: Joi.string().min(2).max(30).required(),
   }),
 });
 
