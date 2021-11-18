@@ -61,7 +61,7 @@ module.exports.deleteMovie = (req, res, next) => {
       if (movie.owner.toString() !== id) {
         throw new Forbidden('Нет доступа для удаления фильма');
       } else {
-        movie.remove()
+        return movie.remove()
           .then(() => res.send({ message: 'deleted' }));
       }
     })
