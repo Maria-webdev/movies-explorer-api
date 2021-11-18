@@ -39,7 +39,6 @@ module.exports.createUser = (req, res, next) => {
 module.exports.updateUser = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, email }, { new: true, runValidators: true })
-    .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.message === 'NotValidId') {
@@ -68,9 +67,8 @@ module.exports.logIn = (req, res, next) => {
       return res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
-        sameSite: 'none',
-        secure: true,
-      }).send({ message: 'cookie created' });
+        sameSite: true,
+      }).send({ message: 'cookies created' });
     })
     .catch((err) => {
       throw new NotAuthError(err.message);
@@ -84,21 +82,17 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.message === 'NotValidId') {
-        throw new NotFoundError('Нет пользователя с таким id');
-      }
-      if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
-      } else {
-        next(err);
-      }
+      res.status(200).send(user);
     })
     .catch(next);
 };
 
 module.exports.logOut = (req, res) => {
   res.clearCookie('jwt').send({ message: 'cookies deleted' });
+};
+
+module.exports.getUsers = (req, res, next) => {
+  User.find({})
+    .then((users) => res.send(users))
+    .catch(next);
 };

@@ -68,18 +68,20 @@ app.use(limiter);
 
 app.post('/signin', userLoginValidation, logIn);
 app.post('/signup', userCreateValidation, createUser);
+app.delete('/signout', logOut);
 
 app.use(requestLogger);
 
-app.use('/movies', auth, moviesRouter);
-app.use('/users/me', auth, usersRouter);
+app.use(auth);
 
-app.delete('/signout', logOut);
+app.use('/', moviesRouter);
+app.use('/', usersRouter);
 
-app.use('*', (req, res, next) => next(new NotFoundError('Запрашиваемый ресурс не найден.')));
+app.use('*', () => {
+  throw new NotFoundError('Запрашиваемый ресурс не найден.');
+});
 
 app.use(errorLogger);
-
 app.use(errors());
 
 app.use((err, req, res, next) => {
@@ -90,7 +92,7 @@ app.use((err, req, res, next) => {
   next();
 });
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
+mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
