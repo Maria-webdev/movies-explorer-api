@@ -27,8 +27,8 @@ const corsAllowed = [
   'http://api.movies-viannat.nomoredomains.rocks',
   // 'https://*front*',
   // 'http://*front*',
-  'https://51.250.5.159',
-  'http://51.250.5.159',
+  'https://51.250.10.72',
+  'http://51.250.10.72',
 ];
 
 require('dotenv').config();
