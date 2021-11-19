@@ -2,15 +2,17 @@ const express = require('express');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
 const router = require('./routes/index');
+const { Errors } = require('./errors/errors');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const limiter = require('./utils/ratelimiter');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -21,18 +23,13 @@ const corsAllowed = [
   'https://localhost:3001',
   'http://localhost:3000',
   'http://localhost:3001',
-  // 'https://viannat-frontend-mesto.nomoredomains.club',
-  // 'http://viannat-frontend-mesto.nomoredomains.club',
-  // 'https://viannat-backend-mesto.nomoredomains.club',
-  // 'http://viannat-backend-mesto.nomoredomains.club',
-  'https://62.84.116.158',
-  'http://62.84.116.158',
+  'https://api.movies-explorer.nomoredomains.rocks',
+  'http://api.movies-explorer.nomoredomains.rocks',
+  // 'https://*front*',
+  // 'http://*front*',
+  'https://51.250.5.159',
+  'http://51.250.5.159',
 ];
-
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
 
 require('dotenv').config();
 
@@ -58,14 +55,7 @@ app.use(router);
 
 app.use(errorLogger);
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-  res.status(statusCode).send({
-    message: statusCode === 500 ? 'серверная ошибка' : message,
-  });
-  next();
-});
+app.use(Errors);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

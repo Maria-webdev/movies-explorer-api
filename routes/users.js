@@ -8,7 +8,7 @@ const {
   getCurrentUser,
   updateUser,
   getUsers,
-  logOut
+  logOut,
 } = require('../controllers/users');
 
 usersRouter.post('/signin', userLoginValidation, logIn);
