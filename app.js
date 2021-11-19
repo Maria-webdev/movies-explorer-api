@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
@@ -9,16 +8,9 @@ const helmet = require('helmet');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-const moviesRouter = require('./routes/movies');
-const usersRouter = require('./routes/users');
+const router = require('./routes/index');
 
-const NotFoundError = require('./errors/not-found');
-
-const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-
-const { logIn, logOut, createUser } = require('./controllers/users');
-const { userLoginValidation, userCreateValidation } = require('./middlewares/validation');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -57,29 +49,12 @@ app.use(cors({
 
 app.options('*', cors());
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-
 app.use(helmet());
 app.use(limiter);
 
-app.post('/signin', userLoginValidation, logIn);
-app.post('/signup', userCreateValidation, createUser);
-app.delete('/signout', logOut);
-
 app.use(requestLogger);
 
-app.use(auth);
-
-app.use('/', moviesRouter);
-app.use('/', usersRouter);
-
-app.use('*', () => {
-  throw new NotFoundError('Запрашиваемый ресурс не найден.');
-});
+app.use(router);
 
 app.use(errorLogger);
 app.use(errors());
@@ -90,13 +65,6 @@ app.use((err, req, res, next) => {
     message: statusCode === 500 ? 'серверная ошибка' : message,
   });
   next();
-});
-
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true,
 });
 
 app.listen(PORT, () => {
