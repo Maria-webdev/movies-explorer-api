@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const NotFoundError = require('../errors/not-found');
 const usersRouter = require('./users');
 const moviesRouter = require('./movies');
-const { Mongodb } = require('../utils/constants');
+const { Mongodb } = require('../utils/config');
 
 router.get('/crash-test', () => {
   setTimeout(() => {

@@ -8,7 +8,7 @@ const BadRequestError = require('../errors/bad-request');
 const ConflictError = require('../errors/conflict');
 const NotFoundError = require('../errors/not-found');
 
-const { JWT_SECRET } = require('../utils/constants');
+const { JWT_SECRET } = require('../utils/config');
 
 module.exports.createUser = (req, res, next) => {
   User.findOne({ email: req.body.email })
