@@ -1,26 +1,16 @@
 const { celebrate, Joi, CelebrateError } = require('celebrate');
-const { isURL, isEmail } = require('validator');
+const { isURL } = require('validator');
 
 module.exports.userInfoValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    email: Joi.string().required().custom((value) => {
-      if (!isEmail(value)) {
-        throw new CelebrateError('с email что-то не то');
-      }
-      return value;
-    }),
+    email: Joi.string().email(),
   }),
 });
 
 module.exports.userLoginValidation = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().custom((value) => {
-      if (!isEmail(value)) {
-        throw new CelebrateError('с email что-то не то');
-      }
-      return value;
-    }),
+    email: Joi.string().email(),
     password: Joi.string().required(),
   }),
 });
@@ -28,12 +18,7 @@ module.exports.userLoginValidation = celebrate({
 module.exports.userCreateValidation = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    email: Joi.string().required().custom((value) => {
-      if (!isEmail(value)) {
-        throw new CelebrateError('с email что-то не то');
-      }
-      return value;
-    }),
+    email: Joi.string().email(),
     password: Joi.string().min(2).max(30).required(),
   }),
 });
