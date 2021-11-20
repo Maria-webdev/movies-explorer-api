@@ -8,6 +8,8 @@ const BadRequestError = require('../errors/bad-request');
 const ConflictError = require('../errors/conflict');
 const NotFoundError = require('../errors/not-found');
 
+const { JWT_SECRET } = require('../utils/constants');
+
 module.exports.createUser = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
@@ -55,13 +57,12 @@ module.exports.updateUser = (req, res, next) => {
 
 module.exports.logIn = (req, res, next) => {
   const { email, password } = req.body;
-  const { NODE_ENV, JWT_SECRET } = process.env;
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
+        JWT_SECRET,
         { expiresIn: '7d' },
       );
       return res.cookie('jwt', token, {

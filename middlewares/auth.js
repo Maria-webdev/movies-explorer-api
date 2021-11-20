@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const NotAuthError = require('../errors/not-auth');
+const { JWT_SECRET } = require('../utils/constants');
 
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
-  const { NODE_ENV, JWT_SECRET = 'super-strong-secret' } = process.env;
 
   if (!token) {
     throw new NotAuthError('Проблемы с аутентификацией');
@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret');
+    payload = jwt.verify(token, JWT_SECRET);
     req.user = payload;
     next();
   } catch (err) {

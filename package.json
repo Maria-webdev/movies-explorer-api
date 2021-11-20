@@ -1,5 +1,6 @@
 {
     "name": "diploma-backend",
+    "author": "Maria Averina",
     "version": "0.1.0",
     "description": "diploma-backend, viannat",
     "main": "app.js",
