@@ -44,8 +44,8 @@ module.exports.updateUser = (req, res, next) => {
       if (err.message === 'NotValidId') {
         throw new NotFoundError('Нет пользователя с таким id');
       }
-      if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+      if (err.name === 'MongoError' && err.code === 11000) {
+        throw new ConflictError('Пользователь с таким email уже существует');
       } else {
         next(err);
       }
