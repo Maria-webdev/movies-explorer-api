@@ -12,8 +12,8 @@ router.get('/crash-test', () => {
   }, 0);
 });
 
-router.use('/', moviesRouter);
 router.use('/', usersRouter);
+router.use('/', moviesRouter);
 
 router.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден.');
