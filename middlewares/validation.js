@@ -69,7 +69,7 @@ module.exports.movieValidation = celebrate({
       }
       return value;
     }),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().integer().required(),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
   }),
