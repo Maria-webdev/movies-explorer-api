@@ -25,10 +25,10 @@ const corsAllowed = [
   'http://localhost:3001',
   'https://api.movies-viannat.nomoredomains.rocks',
   'http://api.movies-viannat.nomoredomains.rocks',
-  // 'https://*front*',
-  // 'http://*front*',
-  'https://51.250.10.72',
-  'http://51.250.10.72',
+  'https://frontend.movies-viannat.nomoredomains.rocks',
+  'http://frontend.movies-viannat.nomoredomains.rocks',
+  'https://62.84.125.85',
+  'http://62.84.125.85',
 ];
 
 require('dotenv').config();
