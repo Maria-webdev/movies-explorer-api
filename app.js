@@ -29,6 +29,8 @@ const corsAllowed = [
   'http://frontend.movies-viannat.nomoredomains.rocks',
   'https://62.84.125.85',
   'http://62.84.125.85',
+  'https://api.nomoreparties.co/beatfilm-movies',
+  'http://api.nomoreparties.co/beatfilm-movies',
 ];
 
 require('dotenv').config();
